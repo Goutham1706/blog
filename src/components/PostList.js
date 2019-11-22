@@ -7,52 +7,22 @@ import AuthorName from './AuthorName';
 class PostList extends Component {
 	constructor(props) {
 		super(props);
-		this.state = { posts: null, names: null };
+		this.state = { posts: this.props.posts, names: this.props.names };
 		this.renderPosts = this.renderPosts.bind(this);
 	}
-	componentDidMount() {
-		this.props.fetchPosts().then((res) => this.setState({ posts: this.props.posts.data }));
-		this.props.getNameById().then((res) => this.setState({ names: this.props.names }));
-	}
-	renderPosts() {
-		if (this.props.id !== null) {
-			return this.state.posts.filter((post) => post.userId === parseInt(this.props.id)).map((post) => {
-				// console.log(post)
-				const userId = `person_${post.userId}`
-				return (
-					<React.Fragment key={post.id}>
-						{/* {console.log(this.props.id)} */}
-						<h1>{post.title}</h1>
-						<AuthorName idForName = {userId} names = {this.state.names}/>
-						<p>{post.body}</p>
-					</React.Fragment>
-				);
-			});
-		} else if (this.props.id === null || this.props.id === '') {
-			if (!this.state.posts) {
-				return (
-					<div>
-						<h1>Loading</h1>
-						{/* <h3>{console.log(this.state.names)}</h3> */}
-					</div>
-				);
-			} else {
-				return this.state.posts.map((post) => {
-					// this.props.getNameById(post.userId)
-					const userId = `person_${post.userId}`;
-					return (
-						<React.Fragment key={post.id}>
-							<h1>{post.title}</h1>
-							<h2>{this.state.names ? this.state.names[`${post.userId}`] : null}</h2>
-							{/* <h3>{console.log(this.state.names)}</h3> */}
-							{/* {this.state.names[userId] ? <h3>{this.state.names[userId]}</h3> : console.log(userId)} */}
-							<AuthorName idForName = {userId} names = {this.state.names}/>
-							<p>{post.body}</p>
-						</React.Fragment>
-					);
-				});
-			}
-		}
+	renderPosts(props) {
+		return props.posts.map((post) => {
+			const userId = `${post.userId}`;
+			return (
+				<React.Fragment key={post.id}>
+					{/* {console.log(this.props)} */}
+					<h1><span>{post.id}</span> {post.title}</h1>
+					{/* <h3>{props.names[userId]}</h3> */}
+					<AuthorName id = {userId}/>
+					<p>{post.body}</p>
+				</React.Fragment>
+			);
+		});
 	}
 	loadAnimation() {
 		return (
@@ -70,7 +40,7 @@ class PostList extends Component {
 		);
 	}
 	render() {
-		return <div>{!this.state.posts ? this.loadAnimation() : this.renderPosts()}</div>;
+		return this.renderPosts(this.props);
 	}
 }
 

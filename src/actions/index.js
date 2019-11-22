@@ -12,17 +12,17 @@ const getId = (id) => {
 		payload: id
 	};
 };
-const getNameById = () => async (dispatch) => {
-	const names = {};
-	await [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ].map((i) =>
-		axios.get(`https://jsonplaceholder.typicode.com/users/${i}`).then((res) => {
-			const n = {}
-			const id = `person_${i}`;
-			n[id] = res.data.name
-			// console.log(id)
-			Object.assign(names, n)
-		})
-	);
-	dispatch({ type: 'GET_NAME_BY_ID', payload: names });
+const getNameById = (id) => async (dispatch) => {
+	const name = await axios.get(`https://jsonplaceholder.typicode.com/users/${id}`).then((res) => res.data);
+	// await [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ].map((i) =>
+	// 	axios.get(`https://jsonplaceholder.typicode.com/users/${i}`).then((res) => {
+	// 		const n = {}
+	// 		const id = `person_${i}`;
+	// 		n[id] = res.data.name
+	// 		// console.log(id)
+	// 		Object.assign(names, n)
+	// 	})
+	// );
+	dispatch({ type: 'GET_NAME_BY_ID', payload: name});
 };
 export { fetchPosts, getId, getNameById };
